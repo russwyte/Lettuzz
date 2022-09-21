@@ -1,0 +1,9 @@
+**/target
+**/.bloop
+/.bsp
+/.metals
+/.vscode
+**/metals.sbt
+/.idea
+*.jar
+/.idea/
