@@ -1,6 +1,7 @@
 package rocks.effect.early.lettuzz
 package example
 
+import rocks.effect.early.lettuzz.*
 import io.lettuce.core.api.async.RedisAsyncCommands
 import zio.*
 
