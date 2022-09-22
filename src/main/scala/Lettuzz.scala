@@ -1,8 +1,9 @@
 package rocks.effect.early.lettuzz
 
 import io.lettuce.core.*
-import io.lettuce.core.api.async.RedisAsyncCommands
+
 import io.lettuce.core.api.StatefulRedisConnection
+import io.lettuce.core.api.async.RedisAsyncCommands
 import io.lettuce.core.cluster.RedisClusterClient
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands
@@ -34,21 +35,10 @@ def close(c: CloseableResources) =
 def client(client: => RedisClient) =
   ZLayer.scoped { ZIO.attempt(client).withFinalizer(close) }
 
-def clusteredClient(client: => RedisClusterClient) =
-  ZLayer.scoped { ZIO.attempt(client).withFinalizer(close) }
-
 def commands[K, V](codec: RedisCodec[K, V] = StringCodec.UTF8)(using Tag[K], Tag[V]) =
   ZLayer.scoped {
     for
       c   <- ZIO.service[Connector]
-      res <- c.connect(codec)
-    yield res
-  }
-
-def clusterCommands[K, V](codec: RedisCodec[K, V] = StringCodec.UTF8)(using Tag[K], Tag[V]) =
-  ZLayer.scoped {
-    for
-      c   <- ZIO.service[ClusterConnector]
       res <- c.connect(codec)
     yield res
   }

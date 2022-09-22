@@ -1,4 +1,5 @@
 package rocks.effect.early.lettuzz
+package cluster
 
 import io.lettuce.core.cluster.RedisClusterClient
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands

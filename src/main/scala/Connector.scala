@@ -22,7 +22,3 @@ object Connector:
       res <- ZIO.succeed(Connector(c))
     yield res
   }
-
-
-
-

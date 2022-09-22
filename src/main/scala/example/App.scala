@@ -4,7 +4,6 @@ package example
 import io.lettuce.core.RedisClient
 import io.lettuce.core.codec.StringCodec
 import zio.*
-import rocks.effect.early.lettuzz.*
 
 object App extends ZIOAppDefault:
   val run = ZIO
