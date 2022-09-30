@@ -34,8 +34,8 @@ object Client:
 
 object BasicSpec extends ZIOSpecDefault:
   def spec =
-    suite("base") {
-      test("true") {
+    suite("basic stuff should work") {
+      test("like reading what you wrote") {
         for
           _ <- ZIO.serviceWithZIO[BizLogic] { _.run }
           _ <- Console.printLine("done")
