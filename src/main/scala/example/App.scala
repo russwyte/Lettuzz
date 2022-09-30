@@ -6,6 +6,7 @@ import io.lettuce.core.codec.StringCodec
 import zio.*
 
 object App extends ZIOAppDefault:
+  assert(true)
   val run = ZIO
     .serviceWithZIO[BizLogic](_.run)
     .provide(
