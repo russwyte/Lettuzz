@@ -28,7 +28,7 @@ type CloseableResources = RedisClient | RedisClusterClient | StatefulRedisConnec
 
 def close(c: CloseableResources) =
   for
-    _ <- Console.printLine(s"closing: ${c.getClass.getSimpleName}").orDie
+    //    _ <- Console.printLine(s"closing: ${c.getClass.getSimpleName}").orDie
     _ <- ZIO.succeed(c.close())
   yield ()
 

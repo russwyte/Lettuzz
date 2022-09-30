@@ -36,10 +36,7 @@ object BasicSpec extends ZIOSpecDefault:
   def spec =
     suite("basic stuff should work") {
       test("like reading what you wrote") {
-        for
-          _ <- ZIO.serviceWithZIO[BizLogic] { _.run }
-          _ <- Console.printLine("done")
-        yield assertTrue(true)
+        ZIO.serviceWithZIO[BizLogic] { _.run }
       }
     }.provide(
       RedisContainer.layer,
@@ -54,10 +51,8 @@ case class BizLogic(redis: RedisAsyncCommands[String, String]):
   val run =
     for
       now    <- Clock.nanoTime.map(_.toString())
-      set    <- redis.set("foo", now).toZIO.fork
-      setRes <- set.join
+      _      <- redis.set("foo", now).toZIO
       getRes <- redis.get("foo").toZIO
-      _      <- Console.printLine(setRes, getRes)
     yield assertTrue(getRes == now)
 end BizLogic
 

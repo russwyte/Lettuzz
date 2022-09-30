@@ -15,6 +15,7 @@ lazy val root = (project in file("."))
       "dev.zio"           %% "zio-test"       % zioVersion % Test,
       "dev.zio"           %% "zio-test-sbt"   % zioVersion % Test,
       "org.testcontainers" % "testcontainers" % "1.17.3"   % Test,
+      "org.slf4j"          % "slf4j-simple"   % "2.0.3"    % Test,
     ),
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
     Test / fork := true,
