@@ -9,6 +9,8 @@ import io.lettuce.core.api.async.*
 import io.lettuce.core.codec.StringCodec
 import io.lettuce.core.RedisClient
 import com.github.dockerjava.api.model.Service
+import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands
+import scala.language.implicitConversions
 
 class RedisContainer:
   val container: GenericContainer[_] =
@@ -23,15 +25,6 @@ object RedisContainer:
   val layer =
     ZLayer.scoped(ZIO.attempt(RedisContainer()).withFinalizer(_.stop))
 
-object Client:
-  val layer = ZLayer.scoped {
-    for
-      c   <- ZIO.service[RedisContainer]
-      res <- ZIO.attempt(RedisClient.create(s"redis://${c.host}:${c.port}")).withFinalizer(close)
-    yield res
-
-  }
-
 object BasicSpec extends ZIOSpecDefault:
   def spec =
     suite("basic stuff should work") {
@@ -43,16 +36,21 @@ object BasicSpec extends ZIOSpecDefault:
       BizLogic.layer,
       commands(StringCodec.UTF8),
       Connector.layer,
-      Client.layer,
+      ZLayer.scoped {
+        for
+          c   <- ZIO.service[RedisContainer]
+          res <- ZIO.attempt(RedisClient.create(s"redis://${c.host}:${c.port}")).withFinalizer(close)
+        yield res
+      },
     )
 end BasicSpec
 
-case class BizLogic(redis: RedisAsyncCommands[String, String]):
+case class BizLogic(redis: RedisAsyncCommands[String, String] & RedisClusterAsyncCommands[String, String]):
   val run =
     for
       now    <- Clock.nanoTime.map(_.toString())
-      _      <- redis.set("foo", now).toZIO
-      getRes <- redis.get("foo").toZIO
+      _      <- redis.set("foo", now)
+      getRes <- redis.get("foo")
     yield assertTrue(getRes == now)
 end BizLogic
 

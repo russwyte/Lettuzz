@@ -11,7 +11,7 @@ import io.lettuce.core.codec.{RedisCodec, StringCodec}
 import zio.*
 
 import java.security.cert.CertPathValidatorException.Reason
-import scala.language.implicitConversions
+import scala.language.implicitConversions._
 
 def makeZIO[T](f: RedisFuture[T]): Task[T] =
   ZIO.async { callback =>
